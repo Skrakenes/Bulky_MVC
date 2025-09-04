@@ -12,7 +12,6 @@ public class ProductController : Controller
     {
         _unitOfWork = unitOfWork;
     }
-
     public IActionResult Index()
     {
         List<Product> objProductList = _unitOfWork.Product.GetAll().ToList();
@@ -23,10 +22,10 @@ public class ProductController : Controller
     {
         return View();
     }
-
     [HttpPost]
     public IActionResult Create(Product obj)
     {
+     
         if (ModelState.IsValid)
         {
             _unitOfWork.Product.Add(obj);
@@ -35,6 +34,7 @@ public class ProductController : Controller
             return RedirectToAction("Index");
         }
         return View();
+
     }
 
     public IActionResult Edit(int? id)
@@ -44,13 +44,13 @@ public class ProductController : Controller
             return NotFound();
         }
         Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
+
         if (productFromDb == null)
         {
             return NotFound();
         }
         return View(productFromDb);
     }
-
     [HttpPost]
     public IActionResult Edit(Product obj)
     {
@@ -62,6 +62,7 @@ public class ProductController : Controller
             return RedirectToAction("Index");
         }
         return View();
+
     }
 
     public IActionResult Delete(int? id)
@@ -69,19 +70,19 @@ public class ProductController : Controller
         if (id == null || id == 0)
         {
             return NotFound();
-        } 
+        }
         Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
+
         if (productFromDb == null)
         {
             return NotFound();
         }
         return View(productFromDb);
     }
-
     [HttpPost, ActionName("Delete")]
     public IActionResult DeletePOST(int? id)
     {
-        Product obj = _unitOfWork.Product.Get(u => u.Id == id);
+        Product? obj = _unitOfWork.Product.Get(u => u.Id == id);
         if (obj == null)
         {
             return NotFound();
@@ -90,6 +91,5 @@ public class ProductController : Controller
         _unitOfWork.Save();
         TempData["success"] = "Product deleted successfully";
         return RedirectToAction("Index");
-
     }
 }
